@@ -9,6 +9,10 @@ import java.util.function.Predicate;
 public class Catalogo {
     private List<Leggibile> catalogo;
 
+    public List<Leggibile> getCatalogo() {
+        return catalogo;
+    }
+
     public Catalogo() {
         this.catalogo = new ArrayList<>();
     }
@@ -22,16 +26,20 @@ public class Catalogo {
         this.catalogo.removeIf(leggibile -> isbnOK.test(leggibile.getCodiceISBN()));
     }
 
+    public Leggibile ricercaPerISBN(String isbn){
+        return catalogo.stream().filter(leggibile -> leggibile.getCodiceISBN().equals(isbn)).toList().get(0);
+    }
+
     public List<Leggibile> ricercaPerAnnoPubblicazione(int annoPubblicazione){
         return catalogo.stream().filter(leggibile -> leggibile.getAnnoPubblicazione() == annoPubblicazione).toList();
     }
 
     public List<Leggibile> ricercaPerAutore(String autore){
-        return catalogo.stream().filter(leggibile -> leggibile instanceof Libro).map(leggibile -> (Libro)leggibile).filter(libro -> libro.getAutore() == autore).map(libro -> (Leggibile)libro).toList();
+        return catalogo.stream().filter(leggibile -> leggibile instanceof Libro).map(leggibile -> (Libro)leggibile).filter(libro -> libro.getAutore().equals(autore)).map(libro -> (Leggibile)libro).toList();
     }
 
     public void salvaFileSuDisco() throws FileNotFoundException {
-        PrintWriter pw = new PrintWriter(new File("src/main/java/antoniogiovanni.marchese/catalogo.txt"));
+        PrintWriter pw = new PrintWriter(new File("catalogo.txt"));
         pw.write("");
         for (Leggibile leggibile : catalogo){
             if(leggibile instanceof Libro){
@@ -57,13 +65,12 @@ public class Catalogo {
                 pw.append(System.lineSeparator());
             }
         }
-
+        pw.close();
     }
 
-    public List<Leggibile> leggiFileDaDisco() throws FileNotFoundException {
+    public void leggiFileDaDisco() throws FileNotFoundException {
 
-        List<Leggibile> ret = new ArrayList<>();
-        Scanner sc = new Scanner(new File("src/main/java/antoniogiovanni.marchese/catalogo.txt"));
+        Scanner sc = new Scanner(new File("catalogo.txt"));
         while (sc.hasNextLine()){
             String line = sc.nextLine();
             StringTokenizer stk = new StringTokenizer(line,"#");
@@ -76,7 +83,7 @@ public class Catalogo {
                 String autore = stk.nextToken();
                 String genere = stk.nextToken();
                 Libro l = new Libro(codiceISBN,titolo,Integer.parseInt(annoPubblicazione),Integer.parseInt(numeroPagine),autore,genere);
-                ret.add(l);
+                this.catalogo.add(l);
             } else if (tipo.equals("m")) {
                 String codiceISBN = stk.nextToken();
                 String titolo = stk.nextToken();
@@ -100,9 +107,9 @@ public class Catalogo {
                 }
                 Rivista r = new Rivista(codiceISBN,titolo,Integer.parseInt(annoPubblicazione),Integer.parseInt(numeroPagine),p);
 
-                ret.add(r);
+                this.catalogo.add(r);
             }
         }
-        return ret;
+        sc.close();
     }
 }

@@ -1,10 +1,10 @@
 package antoniogiovanni.marchese.catalogo;
 
 public abstract class Leggibile {
-    private String codiceISBN;
-    private String titolo;
-    private int annoPubblicazione;
-    private int numeroPagine;
+    protected String codiceISBN;
+    protected String titolo;
+    protected int annoPubblicazione;
+    protected int numeroPagine;
 
     public Leggibile(String codiceISBN, String titolo, int annoPubblicazione, int numeroPagine) {
         this.codiceISBN = codiceISBN;
