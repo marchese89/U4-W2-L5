@@ -7,4 +7,8 @@ public class Rivista extends Leggibile{
         super(codiceISBN, titolo, annoPubblicazione, numeroPagine);
         this.periodicita = periodicita;
     }
+
+    public Periodicita getPeriodicita() {
+        return periodicita;
+    }
 }

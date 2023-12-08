@@ -9,4 +9,12 @@ public class Libro extends Leggibile{
         this.autore = autore;
         this.genere = genere;
     }
+
+    public String getAutore() {
+        return autore;
+    }
+
+    public String getGenere() {
+        return genere;
+    }
 }
