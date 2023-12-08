@@ -3,10 +3,7 @@ package antoniogiovanni.marchese.catalogo;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Predicate;
 
 public class Catalogo {
@@ -61,5 +58,51 @@ public class Catalogo {
             }
         }
 
+    }
+
+    public List<Leggibile> leggiFileDaDisco() throws FileNotFoundException {
+
+        List<Leggibile> ret = new ArrayList<>();
+        Scanner sc = new Scanner(new File("src/main/java/antoniogiovanni.marchese/catalogo.txt"));
+        while (sc.hasNextLine()){
+            String line = sc.nextLine();
+            StringTokenizer stk = new StringTokenizer(line,"#");
+            String tipo = stk.nextToken();
+            if(tipo.equals("b")){
+                String codiceISBN = stk.nextToken();
+                String titolo = stk.nextToken();
+                String annoPubblicazione = stk.nextToken();
+                String numeroPagine = stk.nextToken();
+                String autore = stk.nextToken();
+                String genere = stk.nextToken();
+                Libro l = new Libro(codiceISBN,titolo,Integer.parseInt(annoPubblicazione),Integer.parseInt(numeroPagine),autore,genere);
+                ret.add(l);
+            } else if (tipo.equals("m")) {
+                String codiceISBN = stk.nextToken();
+                String titolo = stk.nextToken();
+                String annoPubblicazione = stk.nextToken();
+                String numeroPagine = stk.nextToken();
+                String periodicita = stk.nextToken();
+                Periodicita p;
+                switch (periodicita){
+                    case "SETTIMANALE" ->{
+                        p = Periodicita.SETTIMANALE;
+                    }
+                    case "MENSILE" ->{
+                        p = Periodicita.MENSILE;
+                    }
+                    case "SEMESTRALE" -> {
+                        p = Periodicita.SEMESTRALE;
+                    }
+                    default -> {
+                        p = null;
+                    }
+                }
+                Rivista r = new Rivista(codiceISBN,titolo,Integer.parseInt(annoPubblicazione),Integer.parseInt(numeroPagine),p);
+
+                ret.add(r);
+            }
+        }
+        return ret;
     }
 }
